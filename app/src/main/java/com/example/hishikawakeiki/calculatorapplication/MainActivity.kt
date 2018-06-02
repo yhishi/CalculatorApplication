@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 
+
+/* class */
 
 /**
  * calculateSign
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // 入力値や結果テキストビュー
         val resultView: TextView = findViewById(R.id.resultView)
 
         val clearButton: Button = findViewById(R.id.clear)
@@ -58,12 +60,10 @@ class MainActivity : AppCompatActivity() {
 
             buttonView.setOnClickListener {
 
-                Toast.makeText(this, "トーストメッセージ${i}", Toast.LENGTH_LONG).show();
-
                 // 結果テキストに値を表示
                 resultView.text = i.toString()
 
-                // グルーバル変数に値を保持
+                // グルーバル変数に値を保持（符号入力前後で保持する変数を変更）
                 if(isafterValueStarted) {
                     afterValue = i
                 } else {
@@ -93,29 +93,31 @@ class MainActivity : AppCompatActivity() {
         }
 
         equalButton.setOnClickListener {
+
+            // 入力符号で計算
             when(sign) {
                 CalculateSign.PLUS     -> resultView.text = (beforeValue + afterValue).toString()
                 CalculateSign.MINUS    -> resultView.text = (beforeValue - afterValue).toString()
                 CalculateSign.MULTI    -> resultView.text = (beforeValue * afterValue).toString()
-                CalculateSign.DIVISION -> resultView.text = (beforeValue / afterValue).toString()
+                CalculateSign.DIVISION -> resultView.text = (beforeValue.toDouble() / afterValue.toDouble()).toString()
             }
-            isafterValueStarted = false
-            beforeValue = 0
-            afterValue = 0
+            init()
         }
 
         clearButton.setOnClickListener {
             resultView.text = 0.toString()
-            isafterValueStarted = false
-            beforeValue = 0
-            afterValue = 0
+            init()
         }
+    }
 
-
-
-
-
-
-
+    /**
+     * init
+     *
+     * 初期状態に戻す
+     */
+    private fun init() {
+        isafterValueStarted = false
+        beforeValue = 0
+        afterValue = 0
     }
 }
