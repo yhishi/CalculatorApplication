@@ -24,8 +24,9 @@ enum class CalculateSign {
 class MainActivity : AppCompatActivity() {
 
     /* Parameters */
-    private var beforeValue: Int = 0
-    private var afterValue: Int = 0
+    private var beforeValues: MutableList<Int> = mutableListOf()
+    private var afterValues: MutableList<Int> = mutableListOf()
+    private var resultValues: MutableList<Int> = mutableListOf()
     private var isafterValueStarted: Boolean = false
     private var sign: CalculateSign = CalculateSign.INIT
 
@@ -48,8 +49,6 @@ class MainActivity : AppCompatActivity() {
         var resViewName: String
         var buttonView: Button
 
-        resultView.text = 0.toString()
-
         // 数字ボタンが押された時の処理
         for (i in 0 until 10) {
 
@@ -61,40 +60,51 @@ class MainActivity : AppCompatActivity() {
             buttonView.setOnClickListener {
 
                 // 結果テキストに値を表示
-                resultView.text = i.toString()
+                resultValues.add(i)
+                resultView.text = resultValues.joinToString(separator = "")
 
                 // グルーバル変数に値を保持（符号入力前後で保持する変数を変更）
                 if(isafterValueStarted) {
-                    afterValue = i
+                    afterValues.add(i)
                 } else {
-                    beforeValue = i
+                    beforeValues.add(i)
                 }
+
             }
+
         }
 
         plusButton.setOnClickListener {
             sign = CalculateSign.PLUS
+            resultValues = mutableListOf()
             isafterValueStarted = true
         }
 
         minusButton.setOnClickListener {
             sign = CalculateSign.MINUS
+            resultValues = mutableListOf()
             isafterValueStarted = true
         }
 
         multiButton.setOnClickListener {
             sign = CalculateSign.MULTI
+            resultValues = mutableListOf()
             isafterValueStarted = true
         }
 
         divisionButton.setOnClickListener {
             sign = CalculateSign.DIVISION
+            resultValues = mutableListOf()
             isafterValueStarted = true
         }
 
         equalButton.setOnClickListener {
 
-            // 入力符号で計算
+            // 入力値リストを数値化
+            val beforeValue = beforeValues.joinToString(separator = "").toInt()
+            val afterValue = afterValues.joinToString(separator = "").toInt()
+
+            // 入力した符号で計算
             when(sign) {
                 CalculateSign.PLUS     -> resultView.text = (beforeValue + afterValue).toString()
                 CalculateSign.MINUS    -> resultView.text = (beforeValue - afterValue).toString()
@@ -117,7 +127,8 @@ class MainActivity : AppCompatActivity() {
      */
     private fun init() {
         isafterValueStarted = false
-        beforeValue = 0
-        afterValue = 0
+        beforeValues = mutableListOf()
+        afterValues = mutableListOf()
+        resultValues = mutableListOf()
     }
 }
