@@ -1,7 +1,9 @@
 package com.example.hishikawakeiki.calculatorapplication
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 
@@ -29,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     private var resultValues: MutableList<Int> = mutableListOf()
     private var isafterValueStarted: Boolean = false
     private var sign: CalculateSign = CalculateSign.INIT
+    private val mHandler = Handler()
+    private var mDecorView: View? = null
 
     /* method */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,29 +80,30 @@ class MainActivity : AppCompatActivity() {
 
         plusButton.setOnClickListener {
             sign = CalculateSign.PLUS
-            resultValues = mutableListOf()
-            isafterValueStarted = true
+            afterValueStart()
         }
 
         minusButton.setOnClickListener {
             sign = CalculateSign.MINUS
-            resultValues = mutableListOf()
-            isafterValueStarted = true
+            afterValueStart()
         }
 
         multiButton.setOnClickListener {
             sign = CalculateSign.MULTI
-            resultValues = mutableListOf()
-            isafterValueStarted = true
+            afterValueStart()
         }
 
         divisionButton.setOnClickListener {
             sign = CalculateSign.DIVISION
-            resultValues = mutableListOf()
-            isafterValueStarted = true
+            afterValueStart()
         }
 
         equalButton.setOnClickListener {
+
+            // 入力数値がない場合、抜ける
+            if(beforeValues.size == 0 || afterValues.size == 0) {
+                return@setOnClickListener
+            }
 
             // 入力値リストを数値化
             val beforeValue = beforeValues.joinToString(separator = "").toInt()
@@ -123,6 +128,16 @@ class MainActivity : AppCompatActivity() {
     /**
      * init
      *
+     * 符号入力後の次の値用の処理
+     */
+    private fun afterValueStart() {
+        resultValues = mutableListOf()
+        isafterValueStarted = true
+    }
+
+    /**
+     * init
+     *
      * 初期状態に戻す
      */
     private fun init() {
@@ -131,4 +146,5 @@ class MainActivity : AppCompatActivity() {
         afterValues = mutableListOf()
         resultValues = mutableListOf()
     }
+
 }
